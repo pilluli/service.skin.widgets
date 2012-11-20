@@ -555,6 +555,44 @@ class Main:
                 self._fetch_song('RandomSong')
                 self._fetch_addon('RandomAddon')
 
+    def _seconds_to_string( self, seconds, tseconds, format ):
+        timestr = ''
+        hh = mm = ss = 0
+        try:
+          time = float(tseconds) - float(seconds)
+          if time > 0.0:
+              hh = int(time / 3600)
+              time = time % 3600
+              mm = int(time / 60)
+              ss = int(time % 60)
+          if format == 'long':
+              if hh == 1:
+                  timestr = ('%d ' + str(self.__language__(90001))) % hh
+              if hh > 1:
+                  timestr = ('%d ' + str(self.__language__(90002))) % hh
+              if mm > 0:
+                  if mm == 1:
+                      timestr = timestr + ((' %d ' + str(self.__language__(90003))) % mm)
+                  else:
+                      timestr = timestr + ((' %d ' + str(self.__language__(90004))) % mm)
+              if hh == 0 and mm == 0:
+                  timestr = '0 ' + str(self.__language__(90004))
+              timestr = timestr + ' ' + str(self.__language__(90005))
+          if format == 'short':
+              strm = ''
+              if hh > 0:
+                  timestr = '%dh' % hh
+                  strm = ' '
+              if mm > 0:
+                  timestr = timestr + strm + ('%02dmin' % mm)
+              if hh == 0 and mm == 0:
+                  timestr = '0min'
+        except:
+          timestr = 'why here?'
+  
+        return timestr
+
+
 def media_path(path):
     # Check for stacked movies
     try:
