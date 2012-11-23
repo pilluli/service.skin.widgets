@@ -164,6 +164,8 @@ class Main:
             count += 1
             item = v[2]
 
+            log('Adding inprogress video titled = "' + item['title'] + '" - ' + self._seconds_to_string(v[0],'short'))
+            self.WINDOW.setProperty("%s.%d.Type"            % (request, count), v[1])
             self.WINDOW.setProperty("%s.%d.Art(fanart)"     % (request, count), item['art'].get('fanart',''))
             self.WINDOW.setProperty("%s.%d.File"            % (request, count), item['file'])
             self.WINDOW.setProperty("%s.%d.Path"            % (request, count), media_path(item['file']))
@@ -219,7 +221,8 @@ class Main:
                                            item['streamdetails'])
 
                 if request == "InProgress":
-                    if resume=="true":
+                    log('inprogress INSIDE THE FUNCTION')
+                    if item['resume']['position'] > 0:
                         self.inprogressvideos.append((float(item['resume']['total']) - float(item['resume']['position']), 
                                                       'movie',
                                                       item))
