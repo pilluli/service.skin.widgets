@@ -157,6 +157,9 @@ class Main:
             self._clear_properties(request)
             count = 0
             for item in json_response['result']['movies']:
+              if item['resume']['position'] > 0 and ( (request == "RandomMovie" and self.RANDOMITEMS_UNPLAYED) or (request == 'RecentMovie' and self.RECENTITEMS_UNPLAYED) ):
+                pass
+              else:
                 count += 1
                 if item['resume']['position'] > 0:
                     resume = "true"
@@ -278,6 +281,9 @@ class Main:
             self._clear_properties(request)
             count = 0
             for item in json_response['result']['episodes']:
+              if item['resume']['position'] > 0 and ( (request == 'RandomEpisode' and self.RANDOMITEMS_UNPLAYED) or (request == 'RecentEpisode' and self.RECENTITEMS_UNPLAYED) ):
+                pass
+              else:
                 count += 1
                 '''
                 # This part is commented out because it takes 1.5second extra on my system to request these which doubles the total time.
