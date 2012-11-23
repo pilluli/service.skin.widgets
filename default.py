@@ -66,6 +66,7 @@ class Main:
             self._fetch_info_randomitems()
             self._fetch_info_recommended()
             self._fetch_info_recentitems()
+            self._fetch_info_inprogress()
             b_total = datetime.datetime.now()
             c_total = b_total - a_total
             log('Total time needed for all queries: %s' % c_total)
@@ -78,14 +79,18 @@ class Main:
         self.Player = MyPlayer(action = self._update)
         self.Monitor = MyMonitor(update_listitems = self._update, update_settings = self._init_property)
         self.LIMIT = 20
+        self.inprogressvideos = []
+
 
     def _init_property(self):
         self.WINDOW.setProperty('SkinWidgets_Recommended', '%s' % __addon__.getSetting("recommended_enable"))
         self.WINDOW.setProperty('SkinWidgets_RandomItems', '%s' % __addon__.getSetting("randomitems_enable"))
         self.WINDOW.setProperty('SkinWidgets_RecentItems', '%s' % __addon__.getSetting("recentitems_enable"))
+        self.WINDOW.setProperty('SkinWidgets_InProgressItems', '%s' % __addon__.getSetting("inprogressitems_enable"))
         self.WINDOW.setProperty('SkinWidgets_RandomItems_Update', 'false')
         self.RANDOMITEMS_UPDATE_METHOD = int(__addon__.getSetting("randomitems_method"))
         self.RECENTITEMS_HOME_UPDATE = __addon__.getSetting("recentitems_homeupdate")
+        self.INPROGRESSITEMS_HOME_UPDATE = __addon__.getSetting("inprogressitems_homeupdate")
         # convert time to seconds, times 2 for 0,5 second sleep compensation
         self.RANDOMITEMS_TIME = int(__addon__.getSetting("randomitems_time").rstrip('0').rstrip('.')) * 60 * 2
 
@@ -139,6 +144,16 @@ class Main:
             c = b - a
             log('Total time needed to request recent items queries: %s' % c)
             
+    def _fetch_info_inprogress(self):
+        a = datetime.datetime.now()
+        if __addon__.getSetting("inprogress_enable") == 'true':
+            self.inprogressvideos = []
+            self._fetch_movies('InProgress')
+            self._fetch_tvshows('InProgress')
+            b = datetime.datetime.now()
+            c = b - a
+            log('Total time needed to request inprogress items queries: %s' % c)
+
     def _fetch_movies(self, request):
         json_string = '{"jsonrpc": "2.0",  "id": 1, "method": "VideoLibrary.GetMovies", "params": {"properties": ["title", "playcount", "year", "genre", "studio", "tagline", "plot", "runtime", "file", "plotoutline", "lastplayed", "trailer", "rating", "resume", "art", "streamdetails"], "limits": {"end": %d},' %self.LIMIT
         if request == 'RecommendedMovie':
