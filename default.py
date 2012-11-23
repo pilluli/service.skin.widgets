@@ -160,11 +160,12 @@ class Main:
         from operator import itemgetter, attrgetter
         self.inprogressvideos.sort(key=itemgetter(0))
         
-        for count, v in enumerate( self.inprogressvideos ):
+        count = 0
+        for v in self.inprogressvideos:
             count += 1
             item = v[2]
 
-            log('Adding inprogress video titled = "' + item['title'] + '" - ' + self._seconds_to_string(v[0],'short'))
+            log('Adding inprogress video titled = "' + item['title'] + '" - ' + self._seconds_to_string(v[0],'long'))
             self.WINDOW.setProperty("%s.%d.Type"            % (request, count), v[1])
             self.WINDOW.setProperty("%s.%d.Art(fanart)"     % (request, count), item['art'].get('fanart',''))
             self.WINDOW.setProperty("%s.%d.File"            % (request, count), item['file'])
@@ -195,6 +196,8 @@ class Main:
             json_query = xbmc.executeJSONRPC('%s "sort": {"order": "descending", "method": "dateadded"}}}' %json_string)
         elif request == "RandomMovie" and self.RANDOMITEMS_UNPLAYED:
             json_query = xbmc.executeJSONRPC('%s "sort": {"method": "random" }, "filter": {"field": "playcount", "operator": "lessthan", "value": "1"}}}' %json_string)
+        elif request == 'InProgress':
+            json_query = xbmc.executeJSONRPC('%s "sort": {"order": "descending", "method": "dateadded"}, "filter": {"field": "inprogress", "operator": "true", "value": ""}}}' %json_string)
         else:
             json_query = xbmc.executeJSONRPC('%s "sort": {"method": "random" } }}' %json_string)
         json_query = unicode(json_query, 'utf-8', errors='ignore')
@@ -205,6 +208,7 @@ class Main:
             for item in json_response['result']['movies']:
                 count += 1
                 if item['resume']['position'] > 0:
+                    log('One move has a resume point (inside)')
                     resume = "true"
                     played = '%s%%'%int((float(item['resume']['position']) / float(item['resume']['total'])) * 100)
                 else:
@@ -223,6 +227,7 @@ class Main:
                 if request == "InProgress":
                     log('inprogress INSIDE THE FUNCTION')
                     if item['resume']['position'] > 0:
+                        log('inprogress INSIDE THE FUNCTION AND RESUME')
                         self.inprogressvideos.append((float(item['resume']['total']) - float(item['resume']['position']), 
                                                       'movie',
                                                       item))
@@ -324,6 +329,8 @@ class Main:
             json_query = xbmc.executeJSONRPC('%s "sort": {"order": "descending", "method": "dateadded"}}}' %json_string)
         elif request == 'RandomEpisode' and self.RANDOMITEMS_UNPLAYED:
             json_query = xbmc.executeJSONRPC('%s "sort": {"method": "random" }, "filter": {"field": "playcount", "operator": "lessthan", "value": "1"}}}' %json_string)
+        elif request == 'InProgress':
+            json_query = xbmc.executeJSONRPC('%s "sort": {"order": "descending", "method": "dateadded"}, "filter": {"field": "inprogress", "operator": "true", "value": ""}}}' %json_string)
         else:
             json_query = xbmc.executeJSONRPC('%s "sort": {"method": "random" }}}' %json_string)
         json_query = unicode(json_query, 'utf-8', errors='ignore')
@@ -364,7 +371,9 @@ class Main:
                                                  item['streamdetails'])
 
                 if request == "InProgress":
-                    if resume=="true":
+                    log('inprogress INSIDE THE FUNCTION (episode)')
+                    if item['resume']['position'] > 0:
+                        log('inprogress INSIDE THE FUNCTION AND RESUME (episode)')
                         self.inprogressvideos.append((float(item['resume']['total']) - float(item['resume']['position']), 
                                                       'episode',
                                                       item))
