@@ -146,7 +146,7 @@ class Main:
             
     def _fetch_info_inprogress(self):
         a = datetime.datetime.now()
-        if __addon__.getSetting("inprogress_enable") == 'true':
+        if __addon__.getSetting("inprogressitems_enable") == 'true':
             self.inprogressvideos = []
             self._clear_properties('InProgress')
             self._fetch_movies('InProgress')
@@ -157,29 +157,29 @@ class Main:
             log('Total time needed to request inprogress items queries: %s' % c)
 
     def _set_properties(self, request):
-      from operator import itemgetter, attrgetter
-      self.videos.sort(key=itemgetter(0))
+        from operator import itemgetter, attrgetter
+        self.inprogressvideos.sort(key=itemgetter(0))
+        
+        for count, v in enumerate( self.inprogressvideos ):
+            count += 1
+            item = v[2]
 
-      for count, v in enumerate( self.inprogressvideos ):
-          count += 1
-          item = v[2]
+            self.WINDOW.setProperty("%s.%d.Art(fanart)"     % (request, count), item['art'].get('fanart',''))
+            self.WINDOW.setProperty("%s.%d.File"            % (request, count), item['file'])
+            self.WINDOW.setProperty("%s.%d.Path"            % (request, count), media_path(item['file']))
+            self.WINDOW.setProperty("%s.%d.RemainingTime"   % (request, count ), self._seconds_to_string(v[0],'long') )
+          
+            if v[1]=='movie':
+                self.WINDOW.setProperty("%s.%d.Label1"      % (request, count), item['title'])
+                self.WINDOW.setProperty("%s.%d.Label2"      % (request, count), item['tagline'])
+                self.WINDOW.setProperty("%s.%d.Play"        % (request, count), 'XBMC.RunScript(' + __addonid__ + ',movieid=' + str(item.get('movieid')) + ')')
+            else:
+                self.WINDOW.setProperty("%s.%d.Label1"      % (request, count), item['showtitle'])
+                self.WINDOW.setProperty("%s.%d.Label2"      % (request, count), "s%.2de%.2d - %s" % ( float(item['season']), float(item['episode']), item['title']))
+                self.WINDOW.setProperty("%s.%d.Play"        % (request, count), 'XBMC.RunScript(' + __addonid__ + ',episodeid=' + str(item.get('episodeid')) + ')')
 
-          self.WINDOW.setProperty("%s.%d.Art(fanart)"     % (request, count), item['art'].get('fanart',''))
-          self.WINDOW.setProperty("%s.%d.File"            % (request, count), item['file'])
-          self.WINDOW.setProperty("%s.%d.Path"            % (request, count), media_path(item['file']))
-
-          self.WINDOW.setProperty("%s.%d.RemainingTime"   % (request, count ), self._seconds_to_string(v[0],'long') )
-          if v[1]=='movie':
-              self.WINDOW.setProperty("%s.%d.Label1"      % (request, count), item['title'])
-              self.WINDOW.setProperty("%s.%d.Label2"      % (request, count), item['tagline'])
-              self.WINDOW.setProperty("%s.%d.Play"        % (request, count), 'XBMC.RunScript(' + __addonid__ + ',movieid=' + str(item.get('movieid')) + ')')
-          else:
-              self.WINDOW.setProperty("%s.%d.Label1"      % (request, count), item['showtitle'])
-              self.WINDOW.setProperty("%s.%d.Label2"      % (request, count), "s%.2de%.2d - %s" % ( float(item['season'], float(item['episode'], item['title']))
-              self.WINDOW.setProperty("%s.%d.Play"        % (request, count), 'XBMC.RunScript(' + __addonid__ + ',episodeid=' + str(item.get('episodeid')) + ')')
-
-          if count == self.LIMIT:
-              break
+            if count == self.LIMIT:
+                break
           
                 
 
@@ -218,7 +218,7 @@ class Main:
                 streaminfo = media_streamdetails(item['file'].encode('utf-8').lower(),
                                            item['streamdetails'])
 
-                if request == "Inprogress":
+                if request == "InProgress":
                     if resume=="true":
                         self.inprogressvideos.append((float(item['resume']['total']) - float(item['resume']['position']), 
                                                       'movie',
@@ -360,7 +360,7 @@ class Main:
                 streaminfo = media_streamdetails(item['file'].encode('utf-8').lower(),
                                                  item['streamdetails'])
 
-                if request == "Inprogress":
+                if request == "InProgress":
                     if resume=="true":
                         self.inprogressvideos.append((float(item['resume']['total']) - float(item['resume']['position']), 
                                                       'episode',
