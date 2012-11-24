@@ -165,21 +165,22 @@ class Main:
             count += 1
             item = v[2]
 
-            log('Adding inprogress video titled = "' + item['title'] + '" - ' + self._seconds_to_string(v[0],'long'))
+            log('Adding inprogress video titled = "' + item['title'] + '" - ' + self._seconds_to_string(v[0],'long') + '(' + str(v[0]) + ')')
             self.WINDOW.setProperty("%s.%d.Type"            % (request, count), v[1])
-            self.WINDOW.setProperty("%s.%d.Art(fanart)"     % (request, count), item['art'].get('fanart',''))
             self.WINDOW.setProperty("%s.%d.File"            % (request, count), item['file'])
             self.WINDOW.setProperty("%s.%d.Path"            % (request, count), media_path(item['file']))
             self.WINDOW.setProperty("%s.%d.RemainingTime"   % (request, count ), self._seconds_to_string(v[0],'long') )
           
             if v[1]=='movie':
-                self.WINDOW.setProperty("%s.%d.Label1"      % (request, count), item['title'])
-                self.WINDOW.setProperty("%s.%d.Label2"      % (request, count), item['tagline'])
+                self.WINDOW.setProperty("%s.%d.Title"       % (request, count), item['title'])
+                self.WINDOW.setProperty("%s.%d.Title2"      % (request, count), item['tagline'])
                 self.WINDOW.setProperty("%s.%d.Play"        % (request, count), 'XBMC.RunScript(' + __addonid__ + ',movieid=' + str(item.get('movieid')) + ')')
+                self.WINDOW.setProperty("%s.%d.Art(fanart)" % (request, count), item['art'].get('fanart',''))
             else:
-                self.WINDOW.setProperty("%s.%d.Label1"      % (request, count), item['showtitle'])
-                self.WINDOW.setProperty("%s.%d.Label2"      % (request, count), "s%.2de%.2d - %s" % ( float(item['season']), float(item['episode']), item['title']))
+                self.WINDOW.setProperty("%s.%d.Title"       % (request, count), item['showtitle'])
+                self.WINDOW.setProperty("%s.%d.Title2"      % (request, count), "s%.2de%.2d - %s" % ( float(item['season']), float(item['episode']), item['title']))
                 self.WINDOW.setProperty("%s.%d.Play"        % (request, count), 'XBMC.RunScript(' + __addonid__ + ',episodeid=' + str(item.get('episodeid')) + ')')
+                self.WINDOW.setProperty("%s.%d.Art(fanart)" % (request, count), item['art'].get('tvshow.fanart',''))
 
             if count == self.LIMIT:
                 break
@@ -599,6 +600,7 @@ class Main:
         for count in range(int(self.LIMIT)):
             count += 1
             self.WINDOW.clearProperty("%s.%d.Title" % (request, count))
+            self.WINDOW.clearProperty("%s.%d.Type" % (request, count))
 
     def _update(self, type):
         xbmc.sleep(500)
@@ -639,19 +641,30 @@ class Main:
               time = time % 3600
               mm = int(time / 60)
               ss = int(time % 60)
+              log('time = %f, hh = %d, mm = %d, ss = %d' % (time,hh,mm,ss))
           if format == 'long':
               if hh == 1:
-                  timestr = ('%d ' + str(self.__language__(90001))) % hh
+                  log('here1')
+                  #timestr = ('%d ' + str(self.__language__(90001))) % hh
+                  timestr = ('%d ' + 'hour') % hh
               if hh > 1:
-                  timestr = ('%d ' + str(self.__language__(90002))) % hh
+                  log('here2')
+                  timestr = ('%d ' + 'hours') % hh
+              log('here3')
               if mm > 0:
+                  log('here4')
                   if mm == 1:
-                      timestr = timestr + ((' %d ' + str(self.__language__(90003))) % mm)
+                      log('here5')
+                      timestr = timestr + ((' %d ' + 'minute') % mm)
                   else:
-                      timestr = timestr + ((' %d ' + str(self.__language__(90004))) % mm)
+                      log('here6')
+                      timestr = timestr + ((' %d ' + 'minutes') % mm)
+              log('here7')
               if hh == 0 and mm == 0:
-                  timestr = '0 ' + str(self.__language__(90004))
-              timestr = timestr + ' ' + str(self.__language__(90005))
+                  log('here8')
+                  timestr = '0 ' + 'minutes'
+              log('here9')
+              timestr = timestr + ' ' + 'left'
           if format == 'short':
               strm = ''
               if hh > 0:
