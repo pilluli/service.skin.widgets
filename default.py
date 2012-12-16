@@ -245,7 +245,7 @@ class Main:
                     self.WINDOW.setProperty("%s.%d.Plot"            % (request, count), item['plot'])
                     self.WINDOW.setProperty("%s.%d.PlotOutline"     % (request, count), item['plotoutline'])
                     self.WINDOW.setProperty("%s.%d.Tagline"         % (request, count), item['tagline'])
-                    self.WINDOW.setProperty("%s.%d.Runtime"         % (request, count), item['runtime'])
+                    self.WINDOW.setProperty("%s.%d.Runtime"         % (request, count), runtime)
                     self.WINDOW.setProperty("%s.%d.Rating"          % (request, count), str(round(float(item['rating']),1)))
                     self.WINDOW.setProperty("%s.%d.Trailer"         % (request, count), item['trailer'])
                     self.WINDOW.setProperty("%s.%d.Art(poster)"     % (request, count), art.get('poster',''))
