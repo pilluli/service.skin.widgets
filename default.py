@@ -233,6 +233,11 @@ class Main:
                                                       'movie',
                                                       item))
                 else:
+                    # Temporary check if runtime is an int or str
+                    if isinstance(item['runtime'],int):
+                        runtime = str(item['runtime']/60)
+                    else:
+                        runtime = item['runtime']
                     self.WINDOW.setProperty("%s.%d.Title"           % (request, count), item['title'])
                     self.WINDOW.setProperty("%s.%d.Year"            % (request, count), str(item['year']))
                     self.WINDOW.setProperty("%s.%d.Genre"           % (request, count), " / ".join(item['genre']))
@@ -438,12 +443,17 @@ class Main:
                 path = media_path(item['file'])
                 streaminfo = media_streamdetails(item['file'].encode('utf-8').lower(),
                                                  item['streamdetails'])
+                # Temporary check if runtime is an int or str
+                if isinstance(item['runtime'],int):
+                    runtime = str(item['runtime']/60)
+                else:
+                    runtime = item['runtime']
                 self.WINDOW.setProperty("%s.%d.Title"           % (request, count), item['title'])
                 self.WINDOW.setProperty("%s.%d.Artist"          % (request, count), " / ".join(item['artist']))
                 self.WINDOW.setProperty("%s.%d.Year"            % (request, count), str(item['year']))
                 self.WINDOW.setProperty("%s.%d.Plot"            % (request, count), item['plot'])
                 self.WINDOW.setProperty("%s.%d.Genre"           % (request, count), " / ".join(item['genre']))
-                self.WINDOW.setProperty("%s.%d.Runtime"         % (request, count), item['runtime'])
+                self.WINDOW.setProperty("%s.%d.Runtime"         % (request, count), runtime)
                 self.WINDOW.setProperty("%s.%d.Thumb"           % (request, count), item['thumbnail']) #remove
                 self.WINDOW.setProperty("%s.%d.Fanart"          % (request, count), item['fanart']) #remove
                 self.WINDOW.setProperty("%s.%d.Art(thumb)"      % (request, count), item['thumbnail'])
@@ -772,7 +782,7 @@ class MyPlayer(xbmc.Player):
         self.type = ""
         # Set values based on the file content
         if (self.isPlayingAudio()):
-            self.type = "album"  
+            self.type = "music"  
         else:
             if xbmc.getCondVisibility('VideoPlayer.Content(movies)'):
                 filename = ''
@@ -801,8 +811,8 @@ class MyPlayer(xbmc.Player):
             self.action('movie')
         elif self.type == 'episode':
             self.action('episode')
-        elif self.type == 'album':
-            self.action('album')
+        elif self.type == 'music':
+            self.action('music')
         self.type = ""
 
 if (__name__ == "__main__"):
