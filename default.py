@@ -140,10 +140,6 @@ class Main:
             log('Total time needed to request recent items queries: %s' % c)
             
     def _fetch_movies(self, request):
-        else:
-            json_query = xbmc.executeJSONRPC('%s "sort": {"method": "random" } }}' %json_string)
-        json_query = unicode(json_query, 'utf-8', errors='ignore')
-        json_response = simplejson.loads(json_query)
         if json_response['result'].has_key('movies'):
           if not xbmc.abortRequested:
             json_string = '{"jsonrpc": "2.0",  "id": 1, "method": "VideoLibrary.GetMovies", "params": {"properties": ["title", "playcount", "year", "genre", "studio", "tagline", "plot", "runtime", "file", "plotoutline", "lastplayed", "trailer", "rating", "resume", "art", "streamdetails"], "limits": {"end": %d},' %self.LIMIT
