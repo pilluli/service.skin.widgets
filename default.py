@@ -618,7 +618,7 @@ class Main:
             elif self.RECENTITEMS_HOME_UPDATE == 'true' and not home_update and xbmcgui.getCurrentWindowId() != 10000:
                 home_update = True
             if  self.INPROGRESSITEMS_HOME_UPDATE == 'true' and home_update and xbmcgui.getCurrentWindowId() == 10000:
-                log('updating through deamon')
+                log('updating through daemon')
                 self._fetch_info_inprogress()
                 home_update = False
             elif self.INPROGRESSITEMS_HOME_UPDATE == 'true' and not home_update and xbmcgui.getCurrentWindowId() != 10000:
