@@ -1,7 +1,6 @@
-# XBMC Media Center language file
+1;2c# XBMC Media Center language file
 # Addon Name: Skin Widgets
 # Addon id: service.skin.widgets
-# Addon version: 0.0.18
 # Addon Provider: Martijn
 msgid ""
 msgstr ""
@@ -25,9 +24,7 @@ msgctxt "#32002"
 msgid "Random Items"
 msgstr ""
 
-msgctxt "#32003"
-msgid "Only unplayed"
-msgstr ""
+#empty string with id 32003
 
 msgctxt "#32004"
 msgid "Randomize time (minutes)"
@@ -58,10 +55,14 @@ msgid "Update each time you enter the home screen"
 msgstr ""
 
 msgctxt "#32011"
+msgid "Only unplayed and unfinished"
+msgstr ""
+
+msgctxt "#33011"
 msgid "In-Progress"
 msgstr ""
 
-msgctxt "#32012"
+msgctxt "#33012"
 msgid "In-Progress Videos"
 msgstr ""
 
