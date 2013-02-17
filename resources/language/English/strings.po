@@ -85,3 +85,16 @@ msgstr ""
 msgctxt "#90005"
 msgid "left"
 msgstr ""
+
+msgctxt "#32012"
+msgid "General"
+msgstr ""
+
+msgctxt "#32013"
+msgid "Show plot for unwatched items"
+msgstr ""
+
+msgctxt "#32014"
+msgid "* Hidden to prevent spoilers *"
+msgstr ""
+
