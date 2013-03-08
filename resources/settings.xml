@@ -20,6 +20,5 @@
     </category>
     <category label="33011">
         <setting label="33012" type="bool" id="inprogressitems_enable" default="true"/>
-        <setting label="32010" type="bool" id="inprogressitems_homeupdate" default="true"/>
     </category>
 </settings>

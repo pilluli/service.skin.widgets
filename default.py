@@ -90,7 +90,6 @@ class Main:
         self.WINDOW.setProperty('SkinWidgets_RandomItems_Update', 'false')
         self.RANDOMITEMS_UPDATE_METHOD = int(__addon__.getSetting("randomitems_method"))
         self.RECENTITEMS_HOME_UPDATE = __addon__.getSetting("recentitems_homeupdate")
-        self.INPROGRESSITEMS_HOME_UPDATE = __addon__.getSetting("inprogressitems_homeupdate")
         self.PLOT_ENABLE = __addon__.getSetting("plot_enable")  == 'true'
         # convert time to seconds, times 2 for 0,5 second sleep compensation
         self.RANDOMITEMS_TIME = int(float(__addon__.getSetting("randomitems_time"))) * 60 * 2
@@ -146,6 +145,7 @@ class Main:
             
     def _fetch_info_inprogress(self):
         a = datetime.datetime.now()
+        log('Starting fetch_info_inprogress')
         if __addon__.getSetting("inprogressitems_enable") == 'true':
             self.inprogressvideos = []
             self._clear_properties('InProgress')
@@ -627,15 +627,11 @@ class Main:
                     self.WINDOW.setProperty('SkinWidgets_RandomItems_Update','false')
                     self._fetch_info_randomitems()
                 if  self.RECENTITEMS_HOME_UPDATE == 'true' and home_update and xbmcgui.getCurrentWindowId() == 10000:
+                    log('recent: updating through deamon')
                     self._fetch_info_recentitems()
-                    home_update = False
-                elif self.RECENTITEMS_HOME_UPDATE == 'true' and not home_update and xbmcgui.getCurrentWindowId() != 10000:
-                    home_update = True
-                if  self.INPROGRESSITEMS_HOME_UPDATE == 'true' and home_update and xbmcgui.getCurrentWindowId() == 10000:
-                    log('updating through deamon')
                     self._fetch_info_inprogress()
                     home_update = False
-                elif self.INPROGRESSITEMS_HOME_UPDATE == 'true' and not home_update and xbmcgui.getCurrentWindowId() != 10000:
+                elif self.RECENTITEMS_HOME_UPDATE == 'true' and not home_update and xbmcgui.getCurrentWindowId() != 10000:
                     home_update = True
 
     def _clear_properties(self, request):
