@@ -615,7 +615,7 @@ class Main:
         count = 0
         home_update = False
         while (not xbmc.abortRequested) and self.WINDOW.getProperty('SkinWidgets_Running') == 'true':
-            xbmc.sleep(500)
+            xbmc.sleep(5000)
             if not xbmc.Player().isPlayingVideo():
                 if self.RANDOMITEMS_UPDATE_METHOD == 0:
                     count += 1
@@ -642,7 +642,7 @@ class Main:
             self.WINDOW.clearProperty("%s.%d.Type" % (request, count))
 
     def _update(self, type):
-        xbmc.sleep(1000)
+        xbmc.sleep(5000)
         if type == 'movie':
             #self._fetch_movies('RecommendedMovie')
             self._fetch_movies('RecentMovie')
